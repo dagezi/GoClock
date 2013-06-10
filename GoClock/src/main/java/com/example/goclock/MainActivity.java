@@ -11,6 +11,9 @@ public class MainActivity extends Activity {
     private GoTimer blackTimer;
     private GoTimer whiteTimer;
 
+    private GoTimer currentTimer;
+    private boolean running;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,12 +32,26 @@ public class MainActivity extends Activity {
 
         whiteTimer.init();
         blackTimer.init();
+        currentTimer = blackTimer;
 
-        button = (Button) findViewById(R.id.toggle);
-        button.setOnClickListener(new View.OnClickListener() {
+        final Button toggleButton = (Button) findViewById(R.id.toggle);
+        toggleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                blackTimer.resume();
+                if (running) {
+                    if (blackTimer.isRunning()) {
+                        currentTimer = blackTimer;
+                    } else {
+                        currentTimer = whiteTimer;
+                    }
+                    currentTimer.pause();
+                    running = false;
+                    toggleButton.setTag(R.string.start);
+                } else {
+                    currentTimer.resume();
+                    running = true;
+                    toggleButton.setText(R.string.pause);
+                }
             }
         });
     }

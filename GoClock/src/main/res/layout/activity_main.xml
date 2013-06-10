@@ -12,7 +12,7 @@
     <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Done"
+            android:text="@string/change_turn"
             android:id="@+id/white_button"
             android:layout_weight="30"/>
 
@@ -21,29 +21,27 @@
             android:layout_height="wrap_content"
             android:id="@+id/white_timer"
             android:layout_marginTop="11dp"
-            android:textSize="50dp"/>
+            android:textSize="50sp"/>
     <Button
         android:id="@+id/toggle"
         android:layout_weight="10"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Start"
+        android:text="@string/start"
         />
 
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/black_timer"
-            android:layout_centerHorizontal="true"
             android:layout_marginBottom="12dp"
-            android:textSize="50dp"/>
+            android:textSize="50sp"/>
 
     <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Done"
+            android:text="@string/change_turn"
             android:id="@+id/black_button"
-            android:layout_centerHorizontal="true"
             android:layout_marginBottom="17dp"
             android:layout_weight="30"/>
 

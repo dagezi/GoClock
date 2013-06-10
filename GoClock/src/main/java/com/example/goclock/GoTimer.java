@@ -32,6 +32,7 @@ public class GoTimer {
                 enemyTimer.resume();
             }
         });
+        button.setEnabled(false);
         updateTimerView();
     }
 
@@ -79,5 +80,9 @@ public class GoTimer {
     private void updateTimerView() {
         timerView.setText(String.format("%d:%02d:%02d",
                 seconds / 3600, (seconds % 3600) / 60, (seconds % 60)));
+    }
+
+    public boolean isRunning() {
+        return running;
     }
 }
