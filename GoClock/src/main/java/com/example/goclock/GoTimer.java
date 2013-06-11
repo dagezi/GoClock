@@ -14,10 +14,10 @@ import java.util.TimerTask;
 public class GoTimer {
     private TextView timerView;
     private Button button;
-    private GoTimer enemyTimer;
     private boolean running;
     private int seconds = 60 * 60; // 1 Hour is the default
     private Timer timer;
+    private OnClickListener onClickListner;
 
     public GoTimer(TextView timer, Button button) {
         this.timerView = timer;
@@ -28,12 +28,20 @@ public class GoTimer {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                pause();
-                enemyTimer.resume();
+                if (onClickListner != null) {
+                    onClickListner.onClick(GoTimer.this);
+                }
             }
         });
-        button.setEnabled(false);
         updateTimerView();
+    }
+
+    public interface OnClickListener {
+        void onClick(GoTimer goTimer);
+    }
+
+    public void setOnClickListener(OnClickListener listener) {
+        onClickListner = listener;
     }
 
     public void setSeconds(int seconds) {
@@ -41,17 +49,17 @@ public class GoTimer {
         updateTimerView();
     }
 
-    public void setEnemyTimer(GoTimer enemyTimer) {
-        this.enemyTimer = enemyTimer;
-    }
-
     public void pause() {
         if (timer != null) {
             timer.cancel();
             timer = null;
-            button.setEnabled(false);
         }
         running = false;
+    }
+
+    public void yield() {
+        pause();
+        button.setEnabled(false);
     }
 
     public void resume() {

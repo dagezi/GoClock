@@ -9,5 +9,5 @@
     </string>
     <string name="pause">Pause</string>
     <string name="start">Start</string>
-    <string name="change_turn">Done</string>
+    <string name="change_turn">Done</string><string name="setting">Settings</string>
 </resources>

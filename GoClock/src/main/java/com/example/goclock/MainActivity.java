@@ -7,11 +7,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class MainActivity extends Activity {
-    private GoTimer blackTimer;
-    private GoTimer whiteTimer;
+public class MainActivity extends Activity implements GoTimer.OnClickListener {
+    private GoTimer[] timers = new GoTimer[2];
 
-    private GoTimer currentTimer;
+    private int currentTimerIdx;
+
+    /** Indicating the timer is already started. Note that it's true while the timer is paused. */
     private boolean running;
 
     @Override
@@ -19,41 +20,27 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button button = (Button) findViewById(R.id.white_button);
-        TextView timerView = (TextView) findViewById(R.id.white_timer);
-        whiteTimer = new GoTimer(timerView, button);
+        initGoTimer(0, R.id.black_button, R.id.black_timer);
+        initGoTimer(1, R.id.white_button, R.id.white_timer);
 
-        button = (Button) findViewById(R.id.black_button);
-        timerView = (TextView) findViewById(R.id.black_timer);
-        blackTimer = new GoTimer(timerView, button);
+        currentTimerIdx = 0;
 
-        whiteTimer.setEnemyTimer(blackTimer);
-        blackTimer.setEnemyTimer(whiteTimer);
-
-        whiteTimer.init();
-        blackTimer.init();
-        currentTimer = blackTimer;
-
-        final Button toggleButton = (Button) findViewById(R.id.toggle);
-        toggleButton.setOnClickListener(new View.OnClickListener() {
+        final Button pauseButton = (Button) findViewById(R.id.pause);
+        pauseButton.setEnabled(false);
+        pauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (running) {
-                    if (blackTimer.isRunning()) {
-                        currentTimer = blackTimer;
-                    } else {
-                        currentTimer = whiteTimer;
-                    }
-                    currentTimer.pause();
-                    running = false;
-                    toggleButton.setTag(R.string.start);
-                } else {
-                    currentTimer.resume();
-                    running = true;
-                    toggleButton.setText(R.string.pause);
-                }
+                pauseTimer();
             }
         });
+    }
+
+    private void initGoTimer(int timerIndex, int buttonId, int timerId) {
+        Button button = (Button) findViewById(buttonId);
+        TextView timerView = (TextView) findViewById(timerId);
+        timers[timerIndex] = new GoTimer(timerView, button);
+        timers[timerIndex].init();
+        timers[timerIndex].setOnClickListener(this);
     }
 
     @Override
@@ -62,5 +49,39 @@ public class MainActivity extends Activity {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
-    
+
+    // GoTimer.OnClickListener interface
+    @Override
+    public void onClick(GoTimer goTimer) {
+        if (running) {
+            timers[currentTimerIdx].yield();
+            currentTimerIdx = (currentTimerIdx + 1) % 2;
+            timers[currentTimerIdx].resume();
+        } else {
+            int i;
+            for (i = 0; i < timers.length && timers[i] != goTimer; i++) {
+                // Nothing
+            }
+            startTimer(i);
+        }
+    }
+
+    public void startTimer(int timerIndex) {
+        currentTimerIdx = timerIndex;
+        timers[timerIndex].resume();
+        running = true;
+        Button pauseButton = (Button)findViewById(R.id.pause);
+        pauseButton.setEnabled(true);
+        Button settingButton = (Button) findViewById(R.id.setting);
+        settingButton.setEnabled(false);
+    }
+
+    public void pauseTimer() {
+        timers[currentTimerIdx].pause();
+        Button pauseButton = (Button)findViewById(R.id.pause);
+        pauseButton.setEnabled(false);
+        Button settingButton = (Button) findViewById(R.id.setting);
+        settingButton.setEnabled(true);
+        // TODO(dagezi): Change label of GoTimer's button
+    }
 }
