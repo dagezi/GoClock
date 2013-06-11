@@ -16,7 +16,7 @@
             android:id="@+id/white_button"
             android:layout_weight="30"/>
 
-    <TextView
+    <com.example.goclock.UpsideDownTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/white_timer"
