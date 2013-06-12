@@ -14,10 +14,13 @@ import java.util.TimerTask;
 public class GoTimer {
     private TextView timerView;
     private Button button;
-    private boolean running;
     private int seconds = 60 * 60; // 1 Hour is the default
     private Timer timer;
     private OnClickListener onClickListner;
+
+    public interface OnClickListener {
+        void onClick(GoTimer goTimer);
+    }
 
     public GoTimer(TextView timer, Button button) {
         this.timerView = timer;
@@ -25,6 +28,7 @@ public class GoTimer {
     }
 
     public void init() {
+        button.setText(R.string.start);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -36,10 +40,6 @@ public class GoTimer {
         updateTimerView();
     }
 
-    public interface OnClickListener {
-        void onClick(GoTimer goTimer);
-    }
-
     public void setOnClickListener(OnClickListener listener) {
         onClickListner = listener;
     }
@@ -49,24 +49,15 @@ public class GoTimer {
         updateTimerView();
     }
 
-    public void pause() {
-        if (timer != null) {
-            timer.cancel();
-            timer = null;
-        }
-        running = false;
-    }
-
-    public void yield() {
-        pause();
+    // Turned into "playing" state. Don't start timer.
+    public void resumeGame() {
         button.setEnabled(false);
+        button.setText(R.string.change_turn);
     }
 
-    public void resume() {
-        if (running) {
-            return;
-        }
-        running = true;
+    public void startTurn() {
+        if (timer != null) return;
+
         timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
@@ -85,12 +76,33 @@ public class GoTimer {
         button.setEnabled(true);
     }
 
+    /**
+     * Pause the play.
+     * The button will startTurn the play.
+     */
+    public void pauseGame() {
+        cancelTimer();
+        button.setText(R.string.start);
+    }
+
+    /**
+     * Yield the turn to enemy.
+     * Still in playing state.
+     */
+    public void finishTurn() {
+        cancelTimer();
+        button.setEnabled(false);
+    }
+
+    private void cancelTimer() {
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
+        }
+    }
+
     private void updateTimerView() {
         timerView.setText(String.format("%d:%02d:%02d",
                 seconds / 3600, (seconds % 3600) / 60, (seconds % 60)));
-    }
-
-    public boolean isRunning() {
-        return running;
     }
 }

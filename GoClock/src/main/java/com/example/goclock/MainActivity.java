@@ -12,7 +12,7 @@ public class MainActivity extends Activity implements GoTimer.OnClickListener {
 
     private int currentTimerIdx;
 
-    /** Indicating the timer is already started. Note that it's true while the timer is paused. */
+    /** Indicating the timer is already running. Note that it's false while the play is paused. */
     private boolean running;
 
     @Override
@@ -54,9 +54,9 @@ public class MainActivity extends Activity implements GoTimer.OnClickListener {
     @Override
     public void onClick(GoTimer goTimer) {
         if (running) {
-            timers[currentTimerIdx].yield();
+            timers[currentTimerIdx].finishTurn();
             currentTimerIdx = (currentTimerIdx + 1) % 2;
-            timers[currentTimerIdx].resume();
+            timers[currentTimerIdx].startTurn();
         } else {
             int i;
             for (i = 0; i < timers.length && timers[i] != goTimer; i++) {
@@ -67,8 +67,10 @@ public class MainActivity extends Activity implements GoTimer.OnClickListener {
     }
 
     public void startTimer(int timerIndex) {
+        timers[0].resumeGame();
+        timers[1].resumeGame();
         currentTimerIdx = timerIndex;
-        timers[timerIndex].resume();
+        timers[timerIndex].startTurn();
         running = true;
         Button pauseButton = (Button)findViewById(R.id.pause);
         pauseButton.setEnabled(true);
@@ -77,11 +79,11 @@ public class MainActivity extends Activity implements GoTimer.OnClickListener {
     }
 
     public void pauseTimer() {
-        timers[currentTimerIdx].pause();
+        timers[currentTimerIdx].pauseGame();
+        running = false;
         Button pauseButton = (Button)findViewById(R.id.pause);
         pauseButton.setEnabled(false);
         Button settingButton = (Button) findViewById(R.id.setting);
         settingButton.setEnabled(true);
-        // TODO(dagezi): Change label of GoTimer's button
     }
 }
