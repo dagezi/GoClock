@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/GoClock/GoClock.iml" filepath="$PROJECT_DIR$/GoClock/GoClock.iml" />
-      <module fileurl="file://$PROJECT_DIR$/GoClockProject.iml" filepath="$PROJECT_DIR$/GoClockProject.iml" />
+      <module fileurl="file://$PROJECT_DIR$/GoClock.iml" filepath="$PROJECT_DIR$/GoClock.iml" />
+      <module fileurl="file://$PROJECT_DIR$/GoClock/GoClock-GoClock.iml" filepath="$PROJECT_DIR$/GoClock/GoClock-GoClock.iml" />
     </modules>
   </component>
 </project>

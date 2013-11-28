@@ -3,13 +3,21 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.5+'
+        classpath 'com.android.tools.build:gradle:0.6+'
     }
 }
 apply plugin: 'android'
 
+repositories {
+    mavenCentral()
+}
+
 dependencies {
     compile files('libs/android-support-v4.jar')
+}
+
+dependencies {
+    instrumentTestCompile 'com.jayway.android.robotium:robotium-solo:4.3.1'
 }
 
 android {
