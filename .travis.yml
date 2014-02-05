@@ -11,4 +11,5 @@ before_install:
   - echo y | android update sdk --no-ui --all --filter "android-17,build-tools-17.0.0"
 
 script:
-  - ./gradlew build
+  - ./gradlew assemble
+# build will invoke lint, which throws NPE!
