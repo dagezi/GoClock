@@ -2,6 +2,3 @@ language: android
 android:
   components:
     - build-tools-19.0.0
-script:
-  - ./gradlew assemble
-# build will invoke lint, which throws NPE!
